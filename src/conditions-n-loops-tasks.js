@@ -407,8 +407,25 @@ function getSpiralMatrix(size) {
  *    [7, 8, 9]         [9, 6, 3]
  *  ]                 ]
  */
-function rotateMatrix(/* matrix */) {
-  throw new Error('Not implemented');
+function rotateMatrix(inputMatrix) {
+  const matrix = inputMatrix;
+  const n = matrix.length;
+
+  for (let i = 0; i < n; i += 1) {
+    for (let j = i + 1; j < n; j += 1) {
+      const temp = matrix[i][j];
+      matrix[i][j] = matrix[j][i];
+      matrix[j][i] = temp;
+    }
+  }
+
+  for (let i = 0; i < n; i += 1) {
+    for (let j = 0; j < Math.floor(n / 2); j += 1) {
+      const temp = matrix[i][j];
+      matrix[i][j] = matrix[i][n - 1 - j];
+      matrix[i][n - 1 - j] = temp;
+    }
+  }
 }
 
 /**
@@ -425,7 +442,44 @@ function rotateMatrix(/* matrix */) {
  *  [2, 9, 5, 9]    => [2, 5, 9, 9]
  *  [-2, 9, 5, -3]  => [-3, -2, 5, 9]
  */
-function sortByAsc(/* arr */) {}
+function sortByAsc(arr) {
+  const array = arr;
+
+  function divideArray(startIndex, endIndex) {
+    const pivotValue = array[endIndex];
+    let smallerElementIndex = startIndex - 1;
+
+    for (
+      let currentIndex = startIndex;
+      currentIndex < endIndex;
+      currentIndex += 1
+    ) {
+      if (array[currentIndex] <= pivotValue) {
+        smallerElementIndex += 1;
+        const temp = array[smallerElementIndex];
+        array[smallerElementIndex] = array[currentIndex];
+        array[currentIndex] = temp;
+      }
+    }
+
+    const temp = array[smallerElementIndex + 1];
+    array[smallerElementIndex + 1] = array[endIndex];
+    array[endIndex] = temp;
+
+    return smallerElementIndex + 1;
+  }
+
+  function quickSort(startIndex, endIndex) {
+    if (startIndex < endIndex) {
+      const pivotIndex = divideArray(startIndex, endIndex);
+
+      quickSort(startIndex, pivotIndex - 1);
+      quickSort(pivotIndex + 1, endIndex);
+    }
+  }
+
+  quickSort(0, array.length - 1);
+}
 
 /**
  * Shuffles characters in a string so that the characters with an odd index are moved to the end of the string at each iteration.
